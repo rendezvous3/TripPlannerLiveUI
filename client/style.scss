@@ -13,6 +13,21 @@ body {
   min-width: -webkit-min-content;
 }
 
+li {
+  list-style: none;
+}
+
+.removeBtn {
+  float: right;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  padding: 6px 0;
+  text-align: center;
+  font-size: 12px;
+  line-height: 42%;
+}
+
 #app {
   border-left: 2px solid lighten($medium-brown, 25%);
   border-right: 2px solid lighten($medium-brown, 25%);
