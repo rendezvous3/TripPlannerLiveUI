@@ -2,7 +2,9 @@ const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const path = require('path');
-
+const models = require('../models');
+const db = models.db;
+const apiRouter = require('../routes/api.js');
 
 const app = express();
 
@@ -14,11 +16,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
 
-app.use(function(req, res, next){
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
-});
+
 
 
 app.use(function(err, req, res, next) {
@@ -29,9 +27,20 @@ app.use(function(err, req, res, next) {
   );
 });
 
+app.use('/api', apiRouter);
+
+app.use(function(req, res, next){
+    var err = new Error('Not Found');
+    err.status = 404;
+    next(err);
+});
 
 
 
-app.listen(3000, function(){
-    console.log('Server is Running!');
+db.sync()
+.then(function(){
+    app.listen(3000, function(){
+        console.log('Server is Running!');
+    })
 })
+.catch(console.error)
