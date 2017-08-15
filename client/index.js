@@ -80,6 +80,15 @@ document.getElementById("hotels-add").addEventListener("click",function(){
   })
   .then(function(hotel){
     buildMarker("hotels", hotel.place.location).addTo(map);
+    map.flyTo({
+      center: hotel.place.location,
+      zoom: 18,
+      speed: 0.8,
+      curve: 1.8,
+      easing(t) {
+        return t;
+      }
+    });
   })
   .catch(console.error);
   
@@ -110,6 +119,16 @@ document.getElementById("restaurants-add").addEventListener("click",function(){
   })
   .then(function(hotel){
     buildMarker("restaurants", hotel.place.location).addTo(map);
+    map.flyTo({
+      center: hotel.place.location,
+      zoom: 18,
+      speed: 0.8,
+      curve: 1.8,
+      easing(t) {
+        return t;
+      }
+    });
+
   })
   .catch(console.error);
   console.log(selectVal)
@@ -138,9 +157,22 @@ document.getElementById("activities-add").addEventListener("click",function(){
   })
   .then(function(hotel){
     buildMarker("activities", hotel.place.location).addTo(map);
+    map.flyTo({
+      center: hotel.place.location,
+      zoom: 18,
+      speed: 0.8,
+      curve: 1.8,
+      easing(t) {
+        return t;
+      }
+    });
   })
   .catch(console.error);
   console.log(selectVal)
 })
+
+
+
+
 
 
