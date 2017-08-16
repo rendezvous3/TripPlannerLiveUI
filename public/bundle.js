@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -521,36 +521,62 @@ module.exports={"$version":8,"$root":{"version":{"required":true,"type":"enum","
 
 
 //# sourceMappingURL=mapbox-gl.js.map
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ }),
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(2);
-module.exports = __webpack_require__(5);
+const { Marker } = __webpack_require__(0);
+
+const iconURLs = {
+  hotels: "http://i.imgur.com/D9574Cu.png",
+  restaurants: "http://i.imgur.com/cqR6pUI.png",
+  activities: "http://i.imgur.com/WbMOfMl.png"
+};
+
+const buildMarker = (type, coords) => {
+  const markerEl = document.createElement("div");
+  markerEl.style.backgroundSize = "contain";
+  markerEl.style.width = "32px";
+  markerEl.style.height = "37px";
+  markerEl.style.backgroundImage = `url(${iconURLs[type]})`;
+  return new Marker(markerEl).setLngLat(coords);
+};
+
+module.exports = buildMarker;
 
 
 /***/ }),
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
+__webpack_require__(3);
+module.exports = __webpack_require__(6);
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
 const mapboxgl = __webpack_require__(0);
-const buildMarker = __webpack_require__(4);
+const buildMarker = __webpack_require__(1);
+const createListItem = __webpack_require__(5);
+
 
 /*
   * Instantiate the Map
   */
 
-mapboxgl.accessToken = "pk.eyJ1IjoibGNoZXd5IiwiYSI6ImNqNmFnZG1oejB4bnkycHFyc3E5NXRmdjMifQ.QieRY2HH2wA4ApJGqd6enQ";
-const map = new mapboxgl.Map({
-  container: "map-canvas",
-  center: [-74.0, 40.731],
-  zoom: 12.5, // starting zoom
-  pitch: 35,
-  bearing: 20,
-  style: "mapbox://styles/mapbox/streets-v10"
-});
+// mapboxgl.accessToken = "pk.eyJ1IjoibGNoZXd5IiwiYSI6ImNqNmFnZG1oejB4bnkycHFyc3E5NXRmdjMifQ.QieRY2HH2wA4ApJGqd6enQ";
+// const map = new mapboxgl.Map({
+//   container: "map-canvas",
+//   center: [-74.0, 40.731],
+//   zoom: 12.5, // starting zoom
+//   pitch: 35,
+//   bearing: 20,
+//   style: "mapbox://styles/mapbox/streets-v10"
+// });
 
 fetch('/api')
   .then(result => result.json())
@@ -590,122 +616,158 @@ fetch('/api')
 
 
 
-//   document.getElementById("hotels-add").click(function(){
-//     console.log("Anything!")
-// })
 
 document.getElementById("hotels-add").addEventListener("click",function(){
-  let e = document.getElementById("hotels-choices");
-  var selectVal = e.value;
-  var listItem = document.createElement('li');
-  var removeBtn = document.createElement('button');
-  removeBtn.className = 'removeBtn btn btn-danger';
-  removeBtn.append("x");
-  listItem.append(selectVal);
-  listItem.appendChild(removeBtn);
-  document.getElementById("hotels-list").appendChild(listItem);
-  fetch('/api')
-  .then(result => result.json())
-  .then(data => {
-    var theHotel;
-    data.hotel.forEach((hotel)=>{
-      if (hotel.name === selectVal){
-        theHotel = hotel;
-      }
-    })
-    return theHotel;
-  })
-  .then(function(hotel){
-    buildMarker("hotels", hotel.place.location).addTo(map);
-    map.flyTo({
-      center: hotel.place.location,
-      zoom: 18,
-      speed: 0.8,
-      curve: 1.8,
-      easing(t) {
-        return t;
-      }
-    });
-  })
-  .catch(console.error);
+  createListItem("hotels-choices", "hotels-list", "hotel", "hotels");
+  // let e = document.getElementById("hotels-choices");
+  // var selectVal = e.value;
+  // var listItem = document.createElement('li');
+  // var removeBtn = document.createElement('button');
+  // removeBtn.className = 'removeBtn btn btn-danger';
+  // removeBtn.append("x");
+  // listItem.append(selectVal);
+  // listItem.appendChild(removeBtn);
+  // document.getElementById("hotels-list").appendChild(listItem);
+  // fetch('/api')
+  // .then(result => result.json())
+  // .then(data => {
+  //   var theHotel;
+  //   data.hotel.forEach((hotel)=>{
+  //     if (hotel.name === selectVal){
+  //       theHotel = hotel;
+  //     }
+  //   })
+  //   return theHotel;
+  // })
+  // .then(function(hotel){
+  //   var marker = buildMarker("hotels", hotel.place.location).addTo(map);
+  //   removeBtn.addEventListener('click', function(){
+  //     listItem.remove()
+  //     marker.remove();
+  //     map.flyTo({
+  //       container: "map-canvas",
+  //       center: [-74.0, 40.731],
+  //       zoom: 12.5, // starting zoom
+  //       pitch: 35,
+  //       bearing: 20,
+  //       style: "mapbox://styles/mapbox/streets-v10"
+  //     })
+  //   })
+  //   map.flyTo({
+  //     center: hotel.place.location,
+  //     zoom: 18,
+  //     speed: 0.8,
+  //     curve: 1.8,
+  //     easing(t) {
+  //       return t;
+  //     }
+  //   });
+  // })
+  // .catch(console.error);
   
   console.log(selectVal)
 })
 
 
 document.getElementById("restaurants-add").addEventListener("click",function(){
-  let e = document.getElementById("restaurants-choices");
-  var selectVal = e.value;
-  var listItem = document.createElement('li');
-  var removeBtn = document.createElement('button');
-  removeBtn.className = 'removeBtn btn btn-danger';
-  removeBtn.append("x");
-  listItem.append(selectVal);
-  listItem.appendChild(removeBtn);
-  document.getElementById("restaurants-list").appendChild(listItem);
-  fetch('/api')
-  .then(result => result.json())
-  .then(data => {
-    var theHotel;
-    data.restaurant.forEach((hotel)=>{
-      if (hotel.name === selectVal){
-        theHotel = hotel;
-      }
-    })
-    return theHotel;
-  })
-  .then(function(hotel){
-    buildMarker("restaurants", hotel.place.location).addTo(map);
-    map.flyTo({
-      center: hotel.place.location,
-      zoom: 18,
-      speed: 0.8,
-      curve: 1.8,
-      easing(t) {
-        return t;
-      }
-    });
+  createListItem("restaurants-choices", "restaurants-list", "restaurant", "restaurants");
+  // let e = document.getElementById("restaurants-choices");
+  // var selectVal = e.value;
+  // var listItem = document.createElement('li');
+  // var removeBtn = document.createElement('button');
+  // removeBtn.className = 'removeBtn btn btn-danger';
+  // removeBtn.append("x");
+  // listItem.append(selectVal);
+  // listItem.appendChild(removeBtn);
+  // document.getElementById("restaurants-list").appendChild(listItem);
+  // fetch('/api')
+  // .then(result => result.json())
+  // .then(data => {
+  //   var theHotel;
+  //   data.restaurant.forEach((hotel)=>{
+  //     if (hotel.name === selectVal){
+  //       theHotel = hotel;
+  //     }
+  //   })
+  //   return theHotel;
+  // })
+  // .then(function(hotel){
+  //   var marker = buildMarker("restaurants", hotel.place.location).addTo(map);
+  //   removeBtn.addEventListener('click', function(){
+  //     listItem.remove()
+  //     marker.remove();
+  //     map.flyTo({
+  //         container: "map-canvas",
+  //         center: [-74.0, 40.731],
+  //         zoom: 12.5, // starting zoom
+  //         pitch: 35,
+  //         bearing: 20,
+  //         style: "mapbox://styles/mapbox/streets-v10"
+  //       })
+  //   })
+  //   map.flyTo({
+  //     center: hotel.place.location,
+  //     zoom: 18,
+  //     speed: 0.8,
+  //     curve: 1.8,
+  //     easing(t) {
+  //       return t;
+  //     }
+  //   });
 
-  })
-  .catch(console.error);
-  console.log(selectVal)
+  // })
+  // .catch(console.error);
+  // console.log(selectVal)
 })
 
 document.getElementById("activities-add").addEventListener("click",function(){
-  let e = document.getElementById("activities-choices");
-  var selectVal = e.value;
-  var listItem = document.createElement('li');
-  var removeBtn = document.createElement('button');
-  removeBtn.className = 'removeBtn btn btn-danger';
-  removeBtn.append("x");
-  listItem.append(selectVal);
-  listItem.appendChild(removeBtn);
-  document.getElementById("activities-list").appendChild(listItem);
-  fetch('/api')
-  .then(result => result.json())
-  .then(data => {
-    var theHotel;
-    data.activity.forEach((hotel)=>{
-      if (hotel.name === selectVal){
-        theHotel = hotel;
-      }
-    })
-    return theHotel;
-  })
-  .then(function(hotel){
-    buildMarker("activities", hotel.place.location).addTo(map);
-    map.flyTo({
-      center: hotel.place.location,
-      zoom: 18,
-      speed: 0.8,
-      curve: 1.8,
-      easing(t) {
-        return t;
-      }
-    });
-  })
-  .catch(console.error);
-  console.log(selectVal)
+  createListItem("activities-choices", "activities-list", "activity", "activities");
+  // let e = document.getElementById("activities-choices");
+  // var selectVal = e.value;
+  // var listItem = document.createElement('li');
+  // var removeBtn = document.createElement('button');
+  // removeBtn.className = 'removeBtn btn btn-danger';
+  // removeBtn.append("x");
+  // listItem.append(selectVal);
+  // listItem.appendChild(removeBtn);
+  // document.getElementById("activities-list").appendChild(listItem);
+  // fetch('/api')
+  // .then(result => result.json())
+  // .then(data => {
+  //   var theHotel;
+  //   data.activity.forEach((hotel)=>{
+  //     if (hotel.name === selectVal){
+  //       theHotel = hotel;
+  //     }
+  //   })
+  //   return theHotel;
+  // })
+  // .then(function(hotel){
+  //   var marker = buildMarker("activities", hotel.place.location).addTo(map);
+  //   removeBtn.addEventListener('click', function(){
+  //     listItem.remove()
+  //     marker.remove();
+  //     map.flyTo({
+  //       container: "map-canvas",
+  //       center: [-74.0, 40.731],
+  //       zoom: 12.5, // starting zoom
+  //       pitch: 35,
+  //       bearing: 20,
+  //       style: "mapbox://styles/mapbox/streets-v10"
+  //     })
+  //   })
+  //   map.flyTo({
+  //     center: hotel.place.location,
+  //     zoom: 18,
+  //     speed: 0.8,
+  //     curve: 1.8,
+  //     easing(t) {
+  //       return t;
+  //     }
+  //   });
+  // })
+  // .catch(console.error);
+  // console.log(selectVal)
 })
 
 
@@ -716,7 +778,7 @@ document.getElementById("activities-add").addEventListener("click",function(){
 
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports) {
 
 var g;
@@ -743,31 +805,76 @@ module.exports = g;
 
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const { Marker } = __webpack_require__(0);
+const mapboxgl = __webpack_require__(0);
+const buildMarker = __webpack_require__(1);
 
-const iconURLs = {
-  hotels: "http://i.imgur.com/D9574Cu.png",
-  restaurants: "http://i.imgur.com/cqR6pUI.png",
-  activities: "http://i.imgur.com/WbMOfMl.png"
-};
 
-const buildMarker = (type, coords) => {
-  const markerEl = document.createElement("div");
-  markerEl.style.backgroundSize = "contain";
-  markerEl.style.width = "32px";
-  markerEl.style.height = "37px";
-  markerEl.style.backgroundImage = `url(${iconURLs[type]})`;
-  return new Marker(markerEl).setLngLat(coords);
-};
+mapboxgl.accessToken = "pk.eyJ1IjoibGNoZXd5IiwiYSI6ImNqNmFnZG1oejB4bnkycHFyc3E5NXRmdjMifQ.QieRY2HH2wA4ApJGqd6enQ";
+const map = new mapboxgl.Map({
+  container: "map-canvas",
+  center: [-74.0, 40.731],
+  zoom: 12.5, // starting zoom
+  pitch: 35,
+  bearing: 20,
+  style: "mapbox://styles/mapbox/streets-v10"
+});
 
-module.exports = buildMarker;
+function createListItem(selectIdValue, listIdValue, type, icon){
+  let e = document.getElementById(selectIdValue);
+  var selectVal = e.value;
+  var listItem = document.createElement('li');
+  var removeBtn = document.createElement('button');
+  removeBtn.className = 'removeBtn btn btn-danger';
+  removeBtn.append("x");
+  listItem.append(selectVal);
+  listItem.appendChild(removeBtn);
+  document.getElementById(listIdValue).appendChild(listItem);
+  fetch('/api')
+  .then(result => result.json())
+  .then(data => {
+    var theHotel;
+    data[type].forEach((hotel)=>{
+      if (hotel.name === selectVal){
+        theHotel = hotel;
+      }
+    })
+    return theHotel;
+  })
+  .then(function(hotel){
+    var marker = buildMarker(icon, hotel.place.location).addTo(map);
+    removeBtn.addEventListener('click', function(){
+      listItem.remove();
+      marker.remove();
+      map.flyTo({
+        container: "map-canvas",
+        center: [-74.0, 40.731],
+        zoom: 12.5, // starting zoom
+        pitch: 35,
+        bearing: 20,
+        style: "mapbox://styles/mapbox/streets-v10"
+      })
+    })
+    map.flyTo({
+      center: hotel.place.location,
+      zoom: 18,
+      speed: 0.8,
+      curve: 1.8,
+      easing(t) {
+        return t;
+      }
+    });
+  })
+  .catch(console.error);
+}
 
+
+module.exports = createListItem;
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
