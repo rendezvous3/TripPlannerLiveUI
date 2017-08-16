@@ -1,12 +1,4 @@
-const mapboxgl = require("mapbox-gl");
-const buildMarker = require("./marker");
 const createListItem = require("./listItemFunc");
-
-
-/*
-  * Instantiate the Map
-  */
-
 
 function populateSelect(data, selectId){
     data.forEach(function(hotel){
@@ -17,44 +9,15 @@ function populateSelect(data, selectId){
   })
 }
 
-
 fetch('/api')
   .then(result => result.json())
   .then(data => {
-    // {hotel: Array(15), restaurant: Array(15), activity: Array(15)}
     let hotels = data.hotel;
     let restaurants = data.restaurant;
     let activites = data.activity;
-    //var counter = 0;
-    // hotels.forEach(function(hotel){
-    //   var optionEl = document.createElement('option');
-    //   optionEl.append(hotel.name)
-    //   //optionEl.value = counter.toString();
-    //   document.getElementById("hotels-choices")
-    //   .append(optionEl)
-    //   //counter++
-    // })
-
     populateSelect(hotels, "hotels-choices");
     populateSelect(restaurants, "restaurants-choices");
     populateSelect(activites, "activities-choices");
-
-  //   restaurants.forEach(function(restaurant){
-  //     var optionEl = document.createElement('option');
-  //     optionEl.append(restaurant.name)
-  //     document.getElementById("restaurants-choices")
-  //     .append(optionEl)
-  //   })
-
-  //  activites.forEach(function(activity){
-  //     var optionEl = document.createElement('option');
-  //     optionEl.append(activity.name)
-  //     document.getElementById("activities-choices")
-  //     .append(optionEl)
-  //   })
-
-
-
   })
   .catch(console.error);
 
